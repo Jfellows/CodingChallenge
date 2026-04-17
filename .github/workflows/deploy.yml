@@ -14,7 +14,7 @@ env:
   DOTNET_VERSION: '10.0.x'
   AZURE_FUNCTIONAPP_PACKAGE_PATH: './function/http'
   # IMPORTANT: Update this variable with the name emitted by your separate Terraform deployment
-  FUNCTION_APP_NAME: 'funcapp-dev-cnwfr7' 
+  FUNCTION_APP_NAME: 'funcapp-dev-2soy70' 
 
 jobs:
   build-and-deploy:
