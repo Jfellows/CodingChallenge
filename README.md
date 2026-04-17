@@ -42,7 +42,7 @@ Once infrastructure completes, you can push the raw .NET function payload straig
 
 **Deploy using Azure Functions Core Tools:**
 ```bash
-cd ../functions-quickstart-dotnet-azd/http
+cd ../function/http
 func azure functionapp publish <YOUR_FUNCTION_APP_NAME> --dotnet-isolated
 ```
 
