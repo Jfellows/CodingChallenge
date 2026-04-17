@@ -16,6 +16,20 @@ Ensure you have the following CLI tooling installed before proceeding:
 - **[.NET SDK](https://dotnet.microsoft.com/download)** (Required for compilation)
 - **[Azure Functions Core Tools](https://learn.microsoft.com/en-us/azure/azure-functions/functions-run-local)** (Simplifies local testing and deployment)
 
+### 📌 A Note on State Management
+Per the technical challenge parameters, this deployment deliberately relies on **Local State**. No remote backend configurations (like Azure Blob Storage) have been hardcoded. 
+
+When you run `terraform apply`, Hashicorp Terraform will generate a `terraform.tfstate` file strictly on your local disk. 
+
+*(Optional)* If you wish to explicitly enforce local state handling in your configuration, you can declare the `local` backend explicitly in your `provider.tf` file block:
+```hcl
+terraform {
+  backend "local" {
+    path = "terraform.tfstate"
+  }
+}
+```
+
 ---
 
 ## ✅ CLI Deployment Steps

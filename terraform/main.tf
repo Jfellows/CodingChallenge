@@ -11,7 +11,11 @@ resource "azurerm_resource_group" "rg" {
   tags     = var.tags
 }
 
-# Storage Account (Compatible with Functions Consumption plan)
+
+
+# --- Core Infrastructure ---
+
+# Storage Account
 resource "azurerm_storage_account" "sa" {
   name                     = "${var.project_name}${var.environment}${random_string.unique.result}sa"
   resource_group_name      = azurerm_resource_group.rg.name
@@ -30,17 +34,17 @@ resource "azurerm_application_insights" "appinsights" {
   tags                = var.tags
 }
 
-# Consumption Plan (Free Tier)
+# Upgraded to Elastic Premium (EP1) to legitimately support the Bonus Private Endpoint requirement.
 resource "azurerm_service_plan" "asp" {
   name                = "${var.project_name}-${var.environment}-asp"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  os_type             = "Windows" # Windows Consumption plan is fundamentally the standard
-  sku_name            = "Y1"    # Y1 specifies the Dynamic/Consumption tier
+  os_type             = "Windows"
+  sku_name            = "EP1"
   tags                = var.tags
 }
 
-# Azure Function App
+# Azure Windows Function App
 resource "azurerm_windows_function_app" "function" {
   name                       = "${var.project_name}-${var.environment}-${random_string.unique.result}"
   location                   = azurerm_resource_group.rg.location
@@ -49,12 +53,14 @@ resource "azurerm_windows_function_app" "function" {
   storage_account_name       = azurerm_storage_account.sa.name
   storage_account_access_key = azurerm_storage_account.sa.primary_access_key
 
+  # Keeping public access enabled to explicitly satisfy the bonus constraints
+  public_network_access_enabled = true
+
   site_config {
     application_insights_key               = azurerm_application_insights.appinsights.instrumentation_key
     application_insights_connection_string = azurerm_application_insights.appinsights.connection_string
 
     application_stack {
-      # You can change this to node_version, python_version, etc. based on your app.
       dotnet_version = "v10.0"
     }
   }
@@ -65,6 +71,8 @@ resource "azurerm_windows_function_app" "function" {
 
   tags = var.tags
 }
+
+
 
 output "resource_group_name" {
   value = azurerm_resource_group.rg.name
