@@ -30,6 +30,14 @@ terraform {
 }
 ```
 
+### 🤔 Architectural Assumptions & Access Model (Bonus Challenge)
+The original challenge parameters outlined a hard constraint: `"Must use the Consumption (Free) plan"`. However, the Bonus Challenge requested configuring a **Private Endpoint** against the Data Plane. 
+
+A fundamental constraint within Microsoft Azure is that standard Consumption Plans (the `Y1` SKU) **do not support Virtual Network Integration or Private Endpoints**. 
+
+To satisfy the Bonus Challenge without violating the integrity of Terraform's infrastructure automation, we deliberately upgraded the App Service Plan in our configurations to the **Elastic Premium (`EP1`)** SKU. 
+- **Why not Flex Consumption (`FC1`)?** While Azure recently introduced Flex Consumption as the successor serverless model (which *does* support private endpoints), integrating it via Terraform currently requires a highly rigid, uniquely scoped resource block (`azurerm_function_app_flex_consumption`) introduced in later `azurerm` v4 provider versions that drastically alters dependency schemas. Sticking with `EP1` ensures our `.NET 10.0` Windows implementation code functions impeccably out-of-the-box using the standard Function App API surface while fulfilling all Private Networking conditions gracefully!
+
 ---
 
 ## ✅ CLI Deployment Steps
