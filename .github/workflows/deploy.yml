@@ -1,0 +1,60 @@
+name: Deploy Function App
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allows you to manually trigger the workflow from the GitHub UI
+
+permissions:
+  id-token: write # Required for requesting the JWT for Azure OIDC login
+  contents: read  # Required for actions/checkout
+
+env:
+  DOTNET_VERSION: '10.0.x'
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './functions-quickstart-dotnet-azd/http'
+  # IMPORTANT: Update this variable with the name emitted by your separate Terraform deployment
+  FUNCTION_APP_NAME: 'funcapp-dev-cnwfr7' 
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ---------------------------------------------------------
+      # 1. AZURE LOGIN (OIDC via Workload Identity Federation)
+      # ---------------------------------------------------------
+      # Pre-requisite: You need to set these Github Actions Secrets:
+      # AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID
+      - name: 'Az CLI Login'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # ---------------------------------------------------------
+      # 2. SETUP BUILD ENVIRONMENT
+      # ---------------------------------------------------------
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Build and Publish .NET Function
+        working-directory: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        run: |
+          dotnet build --configuration Release
+          dotnet publish -c Release -o ../publish
+
+      # ---------------------------------------------------------
+      # 3. DEPLOY AZURE FUNCTION CODE
+      # ---------------------------------------------------------
+      - name: Deploy to Azure Functions
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ env.FUNCTION_APP_NAME }}
+          package: '${{ github.workspace }}/functions-quickstart-dotnet-azd/publish'

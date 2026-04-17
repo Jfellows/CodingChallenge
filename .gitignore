@@ -1,37 +1,108 @@
-# Local .terraform directories
-.terraform/
+# ========================
+# OS Files
+# ========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
 
+# ========================
+# IDE / Editors
+# ========================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.sln.xcworkspace
+.vs/
+
+# ========================
+# Terraform
+# ========================
+# Local .terraform directories
+**/.terraform/
+**/.terraform.*
 # .tfstate files
 *.tfstate
 *.tfstate.*
-
 # Crash log files
 crash.log
 crash.*.log
-
-# Exclude all .tfvars files, which are likely to contain sensitive data, such as
-# password, private keys, and other secrets. These should not be part of version 
-# control as they are data points which are potentially sensitive and subject 
-# to change depending on the environment.
-*.tfvars
-*.tfvars.json
-
-# Ignore override files as they are usually used to override resources locally and so
-# are not checked in
+# Generated plan files
+*.plan
+tf.plan
+# Ignore override files as they are usually used to override resources locally
 override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
-
-# Ignore transient lock info files created by terraform apply
-.terraform.tfstate.lock.info
-
-# Include override files you do wish to add to version control using negated pattern
-# !example_override.tf
-
-# Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
-# example: *tfplan*
-
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# ========================
+# .NET / C#
+# ========================
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# Project files
+*.csproj.user
+*.vbproj.user
+*.fsproj.user
+
+# NuGet Packages
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+
+# Test Results
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# ========================
+# Azure Functions
+# ========================
+local.settings.json
+secrets.json
+.azurefunctions/
+
+# ========================
+# Node / Frontend / Scripts
+# ========================
+node_modules/
+jspm_packages/
+npm-debug.log
+yarn-error.log
+
+# ========================
+# Azure Developer CLI (Azd)
+# ========================
+.azure/
+terraform/tf.plan
