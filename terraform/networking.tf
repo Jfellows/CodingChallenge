@@ -1,4 +1,7 @@
+/*
 # --- Networking for Bonus Challenge ---
+# (Intentionally commented out as standard Y1 Consumption does not support Private Endpoints.
+#  This infrastructure is theoretically valid for EP1 or Flex Consumption tiers.)
 
 resource "azurerm_virtual_network" "vnet" {
   name                = "${var.project_name}-${var.environment}-vnet"
@@ -49,3 +52,4 @@ resource "azurerm_private_endpoint" "pe" {
     is_manual_connection           = false
   }
 }
+*/

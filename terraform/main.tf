@@ -34,13 +34,13 @@ resource "azurerm_application_insights" "appinsights" {
   tags                = var.tags
 }
 
-# Upgraded to Elastic Premium (EP1) to legitimately support the Bonus Private Endpoint requirement.
+# Restored to strictly Y1 (Consumption) to fulfill free-tier constraints.
 resource "azurerm_service_plan" "asp" {
   name                = "${var.project_name}-${var.environment}-asp"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   os_type             = "Windows"
-  sku_name            = "EP1"
+  sku_name            = "Y1"
   tags                = var.tags
 }
 
@@ -52,9 +52,6 @@ resource "azurerm_windows_function_app" "function" {
   service_plan_id            = azurerm_service_plan.asp.id
   storage_account_name       = azurerm_storage_account.sa.name
   storage_account_access_key = azurerm_storage_account.sa.primary_access_key
-
-  # Keeping public access enabled to explicitly satisfy the bonus constraints
-  public_network_access_enabled = true
 
   site_config {
     application_insights_key               = azurerm_application_insights.appinsights.instrumentation_key
